@@ -1,20 +1,41 @@
-import pandas as pd
-import numpy as np
-
-file_path = r"C:\Users\gaaya\OneDrive\Desktop\Thesis\Final-Prosthetic-Control\data\raw\hand_open.csv"
-
-df = pd.read_csv(
-    file_path,
-    skiprows=8,
-    header=None,
-    usecols=[0],   # load time column
-    nrows=2000     # only first 2000 rows
-)
-
-time = df.iloc[:, 0].values 
-dt = np.mean(np.diff(time))
-fs = 1 / dt
-
-print("Sampling rate:", fs, "Hz")
-
-#sampling rate = 1259.26 Hz 
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "3a53a1d4",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Sampling rate: 1259.2592405942341 Hz\n"
+     ]
+    }
+   ],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "emg_dl",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.19"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
