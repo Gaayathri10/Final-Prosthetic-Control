@@ -2,10 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-# ==============================
-# LOAD SMALL SAMPLE
-# ==============================
-
+# load a small data 
 df = pd.read_csv(
     "data/raw/hand_open.csv",
     skiprows=8,
@@ -24,20 +21,11 @@ print("\nFirst 20 columns preview:")
 print(df.iloc[:, :20].head())
 
 
-# ==============================
-# SPLIT ODD / EVEN COLUMNS
-# ==============================
-
 odd_cols = df.iloc[:, 1::2]   # 1,3,5,7,...
 even_cols = df.iloc[:, 2::2]  # 2,4,6,8,...
 
 print("\nOdd columns shape:", odd_cols.shape)
 print("Even columns shape:", even_cols.shape)
-
-
-# ==============================
-# PLOT SAMPLE CHANNELS
-# ==============================
 
 plt.figure(figsize=(12, 6))
 
@@ -53,10 +41,7 @@ plt.tight_layout()
 plt.show()
 
 
-# ==============================
-# PRINT BASIC STATS
-# ==============================
-
+# print the stats 
 print("\nOdd column mean/std:",
       odd_cols.iloc[:, 0].mean(),
       odd_cols.iloc[:, 0].std())

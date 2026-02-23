@@ -8,10 +8,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from feature_extraction import extract_features
 
-
-# ==============================
-# LOAD DATA
-# ==============================
+# loading the data 
 
 X = np.load("data/processed/X.npy")
 y = np.load("data/processed/y.npy")
@@ -19,12 +16,11 @@ y = np.load("data/processed/y.npy")
 print("Loaded X shape:", X.shape)
 print("Loaded y shape:", y.shape)
 
+# remove the zeros 
+
 print("NaNs in dataset:", np.isnan(X).sum())
 
-
-# ==============================
-# FEATURE EXTRACTION
-# ==============================
+# extracting the features 
 
 print("\nExtracting EMG features...")
 X = extract_features(X)
@@ -32,9 +28,7 @@ X = extract_features(X)
 print("Feature shape:", X.shape)  # should be (num_windows, 32)
 
 
-# ==============================
-# SPLIT 70 / 20 / 10
-# ==============================
+# spliting 70/10/20
 
 X_train, X_temp, y_train, y_temp = train_test_split(
     X, y, test_size=0.30, stratify=y, random_state=42
@@ -49,10 +43,7 @@ print("Val size:", X_val.shape[0])
 print("Test size:", X_test.shape[0])
 
 
-# ==============================
-# NORMALIZE (TRAIN ONLY)
-# ==============================
-
+# normalizing 
 scaler = StandardScaler()
 
 X_train = scaler.fit_transform(X_train)
@@ -60,9 +51,7 @@ X_val = scaler.transform(X_val)
 X_test = scaler.transform(X_test)
 
 
-# ==============================
-# LDA
-# ==============================
+# lda 
 
 print("\nTraining LDA...")
 lda = LinearDiscriminantAnalysis()
@@ -73,7 +62,7 @@ y_pred_lda = lda.predict(X_test)
 print("\nLDA Accuracy:", accuracy_score(y_test, y_pred_lda))
 print(classification_report(y_test, y_pred_lda, zero_division=0))
 
-# Confusion Matrix - LDA
+# Confusion matrix for LDA
 cm_lda = confusion_matrix(y_test, y_pred_lda)
 
 disp = ConfusionMatrixDisplay(confusion_matrix=cm_lda)
@@ -81,9 +70,7 @@ disp.plot(cmap="Blues", xticks_rotation=45)
 plt.title("LDA Confusion Matrix")
 plt.show()
 
-# ==============================
-# SVM
-# ==============================
+# svm 
 
 from sklearn.model_selection import GridSearchCV
 
@@ -116,7 +103,7 @@ y_pred_svm = best_svm.predict(X_test)
 print("\nSVM Accuracy:", accuracy_score(y_test, y_pred_svm))
 print(classification_report(y_test, y_pred_svm, zero_division=0))
 
-# Confusion Matrix - SVM
+# Confusion matrix SVM
 cm_svm = confusion_matrix(y_test, y_pred_svm)
 
 disp = ConfusionMatrixDisplay(confusion_matrix=cm_svm)

@@ -7,6 +7,7 @@ fs = 1359.26
 
 chunks = []
 chunk_size = 200000  
+# doing it in chunks to prevent Memory Error 
 
 for chunk in pd.read_csv(
     "data/raw/hand_open.csv",
@@ -15,7 +16,7 @@ for chunk in pd.read_csv(
     chunksize=chunk_size,
     low_memory=False
 ):
-    chunk = chunk.iloc[:, 1:]  # remove time column
+    chunk = chunk.iloc[:, 1:]  # remove the time column
     chunk = chunk.apply(pd.to_numeric, errors='coerce')
     chunk = chunk.dropna()
     chunks.append(chunk)

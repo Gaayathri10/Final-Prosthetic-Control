@@ -7,9 +7,7 @@ from preprocess import preprocess_emg
 from windowing import create_windows
 
 
-# ==============================
-# CONFIG
-# ==============================
+# config 
 
 RAW_DIR = "data/raw"
 PROCESSED_DIR = "data/processed"
@@ -19,10 +17,7 @@ WINDOW_SIZE = 200
 STEP_SIZE = 40
 NUM_CHANNELS = 8
 
-
-# ==============================
-# BUILD FUNCTION
-# ==============================
+# build functions 
 
 def build_dataset():
 
@@ -30,7 +25,7 @@ def build_dataset():
     print("Looking inside:", RAW_DIR)
 
     if not os.path.exists(RAW_DIR):
-        print("❌ RAW_DIR does not exist.")
+        print(" RAW_DIR does not exist.")
         return
 
     print("Files found:", os.listdir(RAW_DIR))
@@ -83,14 +78,13 @@ def build_dataset():
 
         raw = df_clean.values.astype(np.float32)
 
-        # -------- Preprocess --------
+        # Preprocess 
         print("Filtering...")
         filtered = preprocess_emg(raw, FS)
 
-        # Remove any NaNs created during filtering
+        # Remove any NaNs in the filtered 
         filtered = np.nan_to_num(filtered)
 
-        # -------- Window --------
         label = filename.replace(".csv", "")
 
         X, y = create_windows(
@@ -110,24 +104,24 @@ def build_dataset():
         y_all.append(y)
 
     if len(X_all) == 0:
-        print("\n❌ No data processed. Nothing to save.")
+        print("No data processed. Nothing to save.")
         return
 
-    # -------- Concatenate --------
+    # concatenate 
     X_all = np.concatenate(X_all)
     y_all = np.concatenate(y_all)
 
     print("\nFinal dataset shape:", X_all.shape)
 
-    # -------- Encode labels --------
+    # encode labels 
     le = LabelEncoder()
     y_encoded = le.fit_transform(y_all)
 
-    # -------- Save --------
+    # Save the files in data/processed 
     np.save(os.path.join(PROCESSED_DIR, "X.npy"), X_all)
     np.save(os.path.join(PROCESSED_DIR, "y.npy"), y_encoded)
 
-    print("✅ Dataset saved to data/processed/")
+ 
 
 
 if __name__ == "__main__":

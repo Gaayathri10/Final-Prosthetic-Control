@@ -44,7 +44,6 @@ def build_regression_dataset():
             print("Skipping file (too short after cleaning)")
             continue
 
-        # Separate EMG (odd columns) and motion (even columns)
         emg_all = df.iloc[:, 1::2].values   # odd columns
         motion_all = df.iloc[:, 2::2].values  # even columns
 
@@ -57,11 +56,6 @@ def build_regression_dataset():
 
         # Select first motion channel as regression target
         motion = motion_all[:, 0]
-
-        # Skip files too short for filtering
-        if len(emg) < 20:
-            print("Skipping file (too short for filtering)")
-            continue
 
         # Preprocess EMG
         emg = preprocess_emg(emg.astype(np.float32), FS)
@@ -97,5 +91,3 @@ def build_regression_dataset():
     print("\nRegression dataset saved to data/processed/")
 
 
-if __name__ == "__main__":
-    build_regression_dataset()
