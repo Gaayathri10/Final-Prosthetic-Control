@@ -1,6 +1,9 @@
 *.csv
-__pycache__/
 .vscode/
+
+# Ignore Python bytecode files and cache directories
+*.pyc
+__pycache__/
 
 # Ignore all files in the data/raw and data/processed directories, but keep the directories themselves
 data/raw/*
