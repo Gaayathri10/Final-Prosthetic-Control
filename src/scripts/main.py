@@ -28,7 +28,7 @@ from collections import deque
 from rcnn import EMG_RCNN
 from preprocess import preprocess_emg
 from delsys_interface import get_emg_stream, MOCK as DELSYS_MOCK
-from arduino_interface import ArduinoInterface
+# from arduino_interface import ArduinoInterface
 
 # ── Config — matches your measured values ────────────────────────────────────
 FS            = 1259.26          # your empirically measured sampling rate
@@ -152,8 +152,8 @@ def run(mock_serial=True, port="COM3"):
     ema = EMAFilter(alpha=EMA_ALPHA)
 
     # 4. Arduino
-    arduino = ArduinoInterface(port=port, mock=mock_serial)
-    arduino.connect()
+    # arduino = ArduinoInterface(port=port, mock=mock_serial)
+    # arduino.connect()
 
     # 5. Rolling raw-sample buffer for windowing
     raw_buf = deque(maxlen=WINDOW_SIZE)
@@ -188,8 +188,8 @@ def run(mock_serial=True, port="COM3"):
                 norm = angle_to_normalized(smooth_angle, angle_lo, angle_hi)
 
                 # Send to Arduino — extend to 4-joint array with neutral for unused joints
-                angles_4 = np.array([0.5, 0.5, 0.5, norm], dtype=np.float32)
-                arduino.send_joint_angles(angles_4)
+                # angles_4 = np.array([0.5, 0.5, 0.5, norm], dtype=np.float32)
+                # arduino.send_joint_angles(angles_4)
 
                 n_preds += 1
                 if n_preds % 20 == 0:
@@ -203,7 +203,7 @@ def run(mock_serial=True, port="COM3"):
         print("\n[Main] Stopping...")
     finally:
         emg_stream.stop()
-        arduino.disconnect()
+        # arduino.disconnect()
         print("[Main] Clean shutdown.")
 
 
