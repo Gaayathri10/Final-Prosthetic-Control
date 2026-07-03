@@ -11,3 +11,5 @@ data/raw/*
 
 data/processed/*
 !data/processed/.gitkeep
+.terraform/
+.terraform.lock.hcl
