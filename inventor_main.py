@@ -1,5 +1,6 @@
 from machine import Pin, PWM
 from time import sleep
+import serial
 
 
 # ==========================================================
@@ -190,13 +191,17 @@ class RoboticHand:
         self.servo2.stop()
         self.servo3.stop()
 
+PORT = "/dev/tty50"
+BAUDRATE = 9600
 
 if __name__ == "__main__":
     hand = RoboticHand()
 
     while True:
-        if uart.any():
-            gesture = int(uart.read(1)[0])
-            print("Gesture:", gesture)
-            hand.update(gesture)
-            # ser.write(b"2\n") is the signal to the Arduino
+        data = ser.Serial(PORT, BAUDRATE, timeout=100)
+        if not data:
+            continue
+            
+        code = data[0]
+        gesture = gesture_map.get(code, f"Unknown({code})")
+        print("Received gesture code:", code, "=>", gesture)
