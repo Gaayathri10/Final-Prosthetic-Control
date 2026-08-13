@@ -1,11 +1,5 @@
-from machine import Pin, PWM
+from machine import Pin, PWM, UART
 from time import sleep
-import serial as ser
-
-
-# ==========================================================
-# Continuous Rotation Servo
-# ==========================================================
 
 class ContinuousServo:
     def __init__(self, pin,
@@ -118,6 +112,10 @@ class RoboticHand:
 
     def update(self, gesture):
 
+        if gesture not in range(0, 6):
+            print("Invalid gesture code received, make sure it is between 0 and 5:", gesture)
+            return
+
         if gesture == self.last_gesture:
             return
 
@@ -219,15 +217,33 @@ class RoboticHand:
 
 PORT = "/dev/tty50"
 BAUDRATE = 9600
+UART_ID = 0
+
+uart = UART(
+    UART_ID,
+    baudrate=BAUDRATE
+)
 
 if __name__ == "__main__":
     hand = RoboticHand()
 
-    while True:
-        data = ser.Serial(PORT, BAUDRATE, timeout=100)
-        if not data:
-            continue
-            
-        code = data[0]
-        gesture = gesture_map.get(code, f"Unknown({code})")
-        print("Received gesture code:", code, "=>", gesture)
+    try:
+        while True:
+            if uart.any():
+                gesture = uart.readline()
+                if gesture is None:
+                    continue
+                
+                print("Received gesture code:", gesture)
+
+                try:
+                    gesture_code = int(gesture)
+                    hand.update(gesture_code)
+                except ValueError:
+                    print("Invalid gesture code received:", gesture)
+    except KeyboardInterrupt:
+        print("\n[Main] Stopping...")
+
+    finally:
+        hand.shutdown()
+        print("[Main] Clean shutdown.")
