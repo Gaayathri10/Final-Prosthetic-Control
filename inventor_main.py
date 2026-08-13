@@ -1,6 +1,6 @@
 from machine import Pin, PWM
 from time import sleep
-import serial
+import serial as ser
 
 
 # ==========================================================
@@ -63,32 +63,58 @@ class RoboticHand:
     MAX = 180
     MAX_THUMB = 90
 
+    THUMB_SERVO_PIN = 15
+    INDEX_SERVO_PIN = 14
+    MIDDLE_FINGER_SERVO_PIN = 13
+    RING_FINGER_SERVO_PIN = 12
+    PINKY_SERVO_PIN = 11
+    WRIST_SERVO_PIN = 10
+
     def __init__(self):
 
         self.thumb = ContinuousServo(
-            pin=8,
+            pin=self.THUMB_SERVO_PIN,
             stop=4915,
             speed=220,
             seconds_per_degree=0.0068
         )
 
-        self.servo2 = ContinuousServo(
-            pin=10,
+        self.index_finger = ContinuousServo(
+            pin=self.INDEX_SERVO_PIN,
             stop=4910,
             speed=220,
             seconds_per_degree=0.0066
         )
 
-        self.servo3 = ContinuousServo(
-            pin=12,
+        self.middle_finger = ContinuousServo(
+            pin=self.MIDDLE_FINGER_SERVO_PIN,
             stop=4920,
             speed=220,
             seconds_per_degree=0.0069
         )
 
-        self.last_gesture = None
+        self.ring_finger = ContinuousServo(
+            pin=self.RING_FINGER_SERVO_PIN,
+            stop=4915,
+            speed=220,
+            seconds_per_degree=0.0068
+        )
 
-    # ------------------------------------------------------
+        self.pinky_finger = ContinuousServo(
+            pin=self.PINKY_SERVO_PIN,
+            stop=4910,
+            speed=220,
+            seconds_per_degree=0.0066
+        )
+
+        self.wrist = ContinuousServo(
+            pin=self.WRIST_SERVO_PIN,
+            stop=4915,
+            speed=220,
+            seconds_per_degree=0.0068
+        )
+
+        self.last_gesture = None
 
     def update(self, gesture):
 
@@ -121,18 +147,17 @@ class RoboticHand:
 
     # ------------------------------------------------------
 
-    def move_smooth(self, thumb, s2, s3):
+    def move_smooth(self, thumb, duty):
 
         self.thumb.move_to(thumb)
-        self.servo2.move_to(s2)
-        self.servo3.move_to(s3)
-
+        self.index_finger.move_to(duty)
+        self.middle_finger.move_to(duty)
+        self.ring_finger.move_to(duty)
     # ------------------------------------------------------
 
     def neutral(self):
 
         self.move_smooth(
-            self.MIN,
             self.MIN,
             self.MIN
         )
@@ -145,9 +170,9 @@ class RoboticHand:
 
         sleep(0.1)
 
-        self.servo2.move_to(self.MAX)
+        self.index_finger.move_to(self.MAX)
+        self.middle_finger.move_to(20)
 
-        self.servo3.move_to(20)
 
     # ------------------------------------------------------
 
@@ -155,7 +180,6 @@ class RoboticHand:
 
         self.move_smooth(
             self.MAX_THUMB,
-            self.MAX,
             self.MAX
         )
 
@@ -175,7 +199,6 @@ class RoboticHand:
 
         self.move_smooth(
             self.MAX_THUMB,
-            self.MAX,
             self.MAX
         )
 
@@ -188,8 +211,11 @@ class RoboticHand:
     def shutdown(self):
 
         self.thumb.stop()
-        self.servo2.stop()
-        self.servo3.stop()
+        self.index_finger.stop()
+        self.middle_finger.stop()
+        self.ring_finger.stop()
+        self.pinky_finger.stop()
+        self.wrist.stop()
 
 PORT = "/dev/tty50"
 BAUDRATE = 9600
